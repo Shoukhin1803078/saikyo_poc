@@ -1,0 +1,5 @@
+fastapi
+uvicorn
+langchain-ollama
+psycopg2-binary
+python-dotenv

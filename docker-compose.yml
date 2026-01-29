@@ -1,0 +1,35 @@
+services:
+  db:
+    image: agnohq/pgvector:16
+    container_name: pgvector-db
+    env_file:
+      - .env
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  ai_be:
+    build: ./ai_be
+    container_name: ai_be
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8001:8000"
+
+
+  normal_be:
+    build: ./normal_be
+    container_name: normal_be
+    depends_on:
+      - ai_be
+    ports:
+      - "8000:8000"
