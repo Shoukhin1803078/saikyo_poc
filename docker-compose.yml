@@ -1,35 +1,43 @@
+# docker-compose.yml (unchanged)
 services:
   db:
     image: agnohq/pgvector:16
     container_name: pgvector-db
-    env_file:
+    env_file:                                    
       - .env
+    # environment:                                
+    #   POSTGRES_USER: ${POSTGRES_USER}
+    #   POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    #   POSTGRES_DB: ${POSTGRES_DB}
+    #   POSTGRES_HOST: ${POSTGRES_HOST}
+    #   POSTGRES_PORT: ${POSTGRES_PORT}
+
     ports:
       - "5433:5432"
+
     volumes:
-      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - pg_data:/var/lib/postgresql/data    # persist db data
+
     healthcheck:
+      # test: ["CMD-SHELL", "pg_isready -U ai -d ai"]
       test: ["CMD-SHELL", "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB"]
       interval: 10s
       timeout: 5s
-      retries: 10
+      retries: 5
 
-  ai_be:
-    build: ./ai_be
-    container_name: ai_be
+  api:
+    build: .
+    container_name: fastapi-app
     env_file:
-      - .env
+      - .env                                        
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/app                                     # 🔥 mount local code so migrations appear locally
+    
     depends_on:
       db:
         condition: service_healthy
-    ports:
-      - "8001:8000"
 
-
-  normal_be:
-    build: ./normal_be
-    container_name: normal_be
-    depends_on:
-      - ai_be
-    ports:
-      - "8000:8000"
+volumes:
+  pg_data:
