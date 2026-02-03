@@ -14,10 +14,13 @@ app = FastAPI()
 #     Base.metadata.create_all(bind=engine)
 # app.include_router(jobs_router)
 
-# -------------------------------Gemini------------------------------------
 
-# app/main.py
-# app/main.py
+
+
+
+
+
+# -------------------------------Gemini------------------------------------
 
 @app.on_event("startup")
 def startup():
