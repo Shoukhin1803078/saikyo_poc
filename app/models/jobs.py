@@ -3,6 +3,8 @@ from sqlalchemy import Column, Integer, String, Text, Float, JSON
 from pgvector.sqlalchemy import Vector
 from app.core.database import Base
 
+
+
 class AllJob(Base):
     __tablename__ = "all_jobs"
 
@@ -68,22 +70,38 @@ class AllJob(Base):
 
 # ------------------------Gemini------------------------
 
+# class JobEmbedding(Base):
+#     __tablename__ = "job_embeddings"
+
+#     id = Column(Integer, primary_key=True, autoincrement=True)
+#     job_id = Column(Integer)
+#     serial_no = Column(Integer, index=True) 
+#     company_name = Column(String(255), nullable=True)
+#     chunk_text = Column(Text, nullable=False) 
+#     embedding = Column(Vector(1024)) 
+#     chunk_metadata = Column(JSON, nullable=True)
+
+
+
+
+
+
+
+
+
+
 class JobEmbedding(Base):
     __tablename__ = "job_embeddings"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    job_id = Column(Integer)
-    serial_no = Column(Integer, index=True) # মূল জবের সাথে লিঙ্ক করার জন্য
-    company_name = Column(String(255), nullable=True)
-    
-    # চাঙ্ক করা টেক্সট যা সার্চের জন্য এবং ইউজারের সামনে দেখানোর জন্য ব্যবহৃত হবে
-    chunk_text = Column(Text, nullable=False) 
-    
-    # আমরা ১০২৪ ডাইমেনশনের ভেক্টর ব্যবহার করছি (যেমন: Google/OpenAI/Cohere এর ওপর নির্ভর করে)
-    embedding = Column(Vector(1024)) 
-    
-    # চাঙ্কিং এর মেটাডেটা (যেমন: group_type: "logistics" বা "compensation")
+    job_id = Column(Integer, index=True)
+    serial_no = Column(Integer, index=True)
+    company_name = Column(String(255), index=True, nullable=True)
+    title = Column(String(500), index=True, nullable=True)
+    job_category = Column(String(255), index=True, nullable=True)
+    employment_type = Column(String(100), index=True, nullable=True)
+    intent = Column(String(50), index=True)
+    tags = Column(JSON, nullable=True)
+    chunk_text = Column(Text, nullable=False)
+    embedding = Column(Vector(1024))
     chunk_metadata = Column(JSON, nullable=True)
-
-    # নোট: হাইব্রিড সার্চের জন্য PostgreSQL-এ এই chunk_text কলামের ওপর 
-    # একটি GIN Index তৈরি করা জরুরি যাতে কি-ওয়ার্ড সার্চ দ্রুত হয়।

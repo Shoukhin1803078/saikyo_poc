@@ -2,6 +2,11 @@
 from pydantic import BaseModel, Field,field_validator
 from typing import List, Optional, Any
 
+class MultipleJobResponseModel(BaseModel):
+    status: str
+    ingested_count: int
+    jobs: List[dict]
+
 class JobInput(BaseModel):
     serial_no: int
     media_site: Optional[str] = Field(None, alias="Media site")
@@ -48,6 +53,11 @@ class JobInput(BaseModel):
         return str(v)
     class Config:
         populate_by_name = True
+
+
+class MultipleJobInputModel(BaseModel):
+    jobs: List[JobInput]
+
 
 class SearchRequest(BaseModel):
     query: str

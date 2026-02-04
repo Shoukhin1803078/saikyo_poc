@@ -10,3 +10,5 @@ pandas
 openpyxl
 alembic
 python-dotenv
+pydantic
+instructor
