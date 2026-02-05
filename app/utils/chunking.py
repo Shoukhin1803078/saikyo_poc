@@ -704,10 +704,10 @@ def normalize_tag(tag):
 MAX_SAFE_CHARS = 6000   # ~ safe for 8k token model
 
 
-splitter = RecursiveCharacterTextSplitter(
+splitter = RecursiveCharacterTextSplitter( 
     chunk_size=800,
     chunk_overlap=100,
-    separators=["\n\n", "\n", "。", "、", "！", "？", " ", ""]
+    separators=["\n\n", "\n", "。", "、", "！", "？", " ", ""] 
 )
 
 
@@ -778,12 +778,12 @@ One Day Work Details:
     # CHUNK 3 — Requirements
     # =========================================================
     requirement_text = f"""
-                    Requirements:
-                    {job.requirements or ""}
+Requirements:
+{job.requirements or ""}
 
-                    Requirement Summary:
-                    {job.requirements_summary or ""}
-                """
+Requirement Summary:
+{job.requirements_summary or ""}
+"""
 
     for part in apply_token_guard(requirement_text):
         chunks.append({

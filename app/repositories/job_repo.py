@@ -465,11 +465,11 @@ def search_jobs(query,intent_filter=None):
         #     print(f"base_query: {base_query}")
 
 
-        # ------------------meta data filter in list------------------
+        # ------------------intent filtering ------------------
         if intent_filter:   # If list have any value then apply metadata filter
             print(f"intent_filter applied: {intent_filter}")
             base_query = base_query.filter(JobEmbedding.intent.in_(intent_filter))       # WHERE intent IN ('identity', 'work_content')
-
+            print(f"base_query: {base_query}")
 
         # ------------------vector search------------------
         results = (
@@ -497,6 +497,8 @@ def search_jobs(query,intent_filter=None):
 
                 "distance": round(distance, 4)
             })
+
+
         return output
 
     finally:
